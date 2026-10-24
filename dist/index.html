@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f4f0e8">
+  <title>BookLab — Order-book Playground</title>
+  <meta name="description" content="Replay an order book, run time-aware experiments, and see how leakage changes a result in an interactive research sandbox.">
+  <link rel="stylesheet" href="/app.css"><link rel="stylesheet" href="/editorial.css"><link rel="stylesheet" href="/welcome.css"><script type="module" src="/app.mjs"></script><script type="module" src="/motion.mjs"></script><script type="module" src="/site-info.mjs"></script>
+</head>
+<body data-screen="welcome">
+<a class="skip" href="#workbench">Skip to laboratory</a>
+<header class="maison-header">
+  <a href="#top" class="maison-brand" aria-label="BookLab home">BookLab<span>A research atelier</span></a>
+  <nav aria-label="Workspace"><a href="#workbench" data-nav="workbench">Laboratory</a><a href="#experiments" data-nav="experiments">Notebook <span id="saved-count">0</span></a><a href="#dataset" data-nav="dataset">The evidence</a><a href="#method" data-nav="method">Our method</a></nav>
+  <button id="guide-open" class="field-guide">A field guide <span aria-hidden="true">↗</span></button>
+</header>
+<div class="entrance" id="top" data-intro>
+  <section class="hero-cinema" aria-labelledby="hero-title">
+    <div class="hero-frame">
+      <div class="hero-visual"><img src="/assets/alpine-editorial.webp" alt="A quiet alpine lake at dawn, with layered mountains and a travertine ledge" fetchpriority="high" width="1672" height="940"><div class="hero-wash"></div></div>
+      <div class="hero-copy"><p class="hero-kicker">A different perspective on the market</p><h1 id="hero-title"><span>Beyond</span><span>the <em>surface.</em></span></h1><p class="hero-description">An order-book research atelier.<br>Replay a market. Test an idea.<br>Learn which results deserve your trust.</p><a class="editorial-link" href="#workbench" id="enter-lab">Enter the laboratory <span aria-hidden="true">↗</span></a></div>
+      <div class="hero-caption"><span>Study No. 01<br><strong>Inside the order book</strong></span><span class="entry-hint">A closer look begins here</span><span>BTC / USD<br><strong>A recorded market study</strong></span></div>
+      <button class="motion-toggle" id="motion-toggle" type="button" aria-pressed="false">Reduce motion</button>
+    </div>
+  </section>
+  <div class="welcome-utilities"><span>Independent research · 2026</span><nav aria-label="Welcome information"><button data-dialog="research-checklist">Research checklist</button><button data-dialog="terms">Terms of use</button><button data-dialog="privacy">Privacy policy</button><button data-dialog="storage">Cookies & storage</button></nav></div>
+</div>
+
+<div class="workspace" id="workbench" hidden>
+  <header class="topbar"><div class="breadcrumb">Research <span>/</span> <strong id="view-label">Workbench</strong></div><div class="top-actions"><span class="local-note">Runs stay in this browser</span><button class="button secondary small" id="export" disabled>Export result <span aria-hidden="true">↓</span></button></div></header>
+  <main id="main">
+    <section data-view="workbench" id="lab" hidden>
+      <div class="page-heading"><div><p class="eyebrow">The laboratory / Study No. 01</p><h1 class="lab-title">Observe. Question. Repeat.</h1><p>Replay the book. Change one assumption. Compare the result.</p></div><button class="button secondary" id="reset">Reset controls <span aria-hidden="true">↺</span></button></div>
+      <div class="sample-bar"><div class="sample-picker"><span class="sample-tag" id="source-badge">Recorded sample</span><label for="dataset-choice" class="sr-only">Choose dataset</label><select id="dataset-choice"><option value="recorded">Coinbase · BTC-USD · 90 seconds</option><option value="synthetic">Synthetic · eight short sessions</option></select></div><p id="sample-note">A historical capture. No live market connection.</p></div>
+      <div class="workbench-grid">
+        <div class="analysis-column">
+          <section class="panel market-panel" aria-labelledby="market-title"><div class="panel-top"><div><h2 id="market-title">Mid-price replay</h2><p id="capture-time">Loading recorded observations…</p></div><div class="market-value"><strong id="mid-price">—</strong><span>USD</span></div></div>
+            <div class="chart-area" id="price-chart"><div class="loading-state">Opening the research sample…</div></div>
+            <div class="replay-controls"><button id="play" class="icon-button" aria-label="Play replay" disabled>▶</button><span class="replay-time" id="replay-time">00:00.0</span><label class="sr-only" for="seek">Replay position</label><input type="range" id="seek" min="0" max="100" value="0" disabled><label class="sr-only" for="speed">Replay speed</label><select id="speed"><option value="1">1×</option><option value="2">2×</option><option value="5">5×</option></select></div>
+            <div class="replay-footer"><span><span class="legend-mark price"></span>Mid-price · USD</span><span id="observation-counter">— observations</span><button id="jump-holdout" class="text-button" disabled>Jump to holdout →</button></div>
+          </section>
+          <section class="panel results-panel" aria-labelledby="results-title"><div class="panel-top"><div><h2 id="results-title">A question, tested.</h2><p>Three approaches, one held-out period.</p></div><span id="result-status" class="quiet-badge">Getting ready</span></div>
+            <div id="result-empty" class="results-empty"><span class="loader" aria-hidden="true"></span><p id="progress">Preparing your first experiment…</p></div>
+            <div id="result-content" hidden><div class="headline-metrics"><div><span>Logistic macro F1</span><strong id="main-f1">—</strong><small id="delta-f1">Compared with the majority baseline</small></div><div><span>Test observations</span><strong id="test-count">—</strong><small id="purge-count">Label overlaps removed</small></div><div><span>Selected regularization</span><strong id="selected-c">—</strong><small>Chosen on validation only</small></div></div>
+              <div id="model-comparison" class="model-comparison"></div><div class="result-insight" id="result-insight"></div>
+              <div class="result-bottom"><p id="interval-note"></p><button id="save-run" class="button secondary small">Save experiment <span aria-hidden="true">＋</span></button></div>
+              <details class="diagnostic"><summary>Class results & validation</summary><div class="table-scroll"><table id="class-table"></table></div><div id="validation-detail"></div><p id="model-note"></p></details>
+            </div>
+          </section>
+        </div>
+        <aside class="right-column">
+          <section class="panel experiment-controls" aria-labelledby="settings-title"><div class="panel-top"><div><h2 id="settings-title">Experiment settings</h2><p>Change one thing at a time.</p></div><span class="settings-icon" aria-hidden="true">≡</span></div>
+            <span class="field-label" id="horizon-label">Prediction horizon <span>ahead</span></span><div class="segmented" role="group" aria-labelledby="horizon-label"><button data-horizon="0.25">250 ms</button><button data-horizon="0.5">500 ms</button><button data-horizon="1" class="selected" aria-pressed="true">1 sec</button><button data-horizon="2">2 sec</button></div>
+            <label class="field-label" for="features">Feature set</label><select id="features" class="field"><option value="all">Order book + trailing returns</option><option value="book">Order book only</option></select>
+            <label class="field-label" for="deadband">Unchanged-price deadband <span>bps</span></label><input id="deadband" class="field" type="number" min="0" max="5" step="0.001" value="0.001"><p class="field-help">Moves inside this band count as unchanged.</p>
+            <label class="field-label" for="train-share">Training share <output id="train-output">60%</output></label><input id="train-share" type="range" min="40" max="75" step="5" value="60"><div class="range-labels"><span>40%</span><span>Test keeps the final 20%</span><span>75%</span></div>
+            <details class="leakage-tools"><summary>Try a leakage trap <span aria-hidden="true">↗</span></summary><label class="field-label" for="split-mode">Validation strategy</label><select class="field" id="split-mode"><option value="chronological">Chronological + purged</option><option value="random">Random shuffle · invalid demo</option></select><label class="check-label"><input type="checkbox" id="leak-feature"><span>Give the model the future target</span></label><p>Intentionally break the rules to see how a good-looking score can mislead you.</p></details>
+            <div id="leak-warning" class="warning" role="status" hidden>Invalid protocol: this setting exposes future information. Its scores are a teaching demonstration.</div>
+            <button id="run" class="button primary full" disabled>Run experiment <span aria-hidden="true">↗</span></button><p class="run-note" id="run-note">Calculated locally. No API key needed.</p>
+          </section>
+          <section class="panel book-panel" aria-labelledby="book-title"><div class="panel-top"><div><h2 id="book-title">Beneath the surface</h2><p>Six price levels on each side.</p></div></div><div class="book-labels"><span>Bid size · BTC</span><span>Price · USD</span><span>Ask size · BTC</span></div><div id="book-levels" class="book-levels"><p class="muted">Loading book levels…</p></div><div class="imbalance"><span>Top-level imbalance</span><strong id="imbalance-value">—</strong><div class="imbalance-track"><div id="imbalance-fill"></div><i></i></div><div class="range-labels"><span>Sell pressure</span><span>Buy pressure</span></div></div><div id="frame-prediction" class="frame-prediction">Run an experiment to inspect held-out predictions.</div></section>
+        </aside>
+      </div>
+      <p class="workspace-footnote">A research instrument, not a trading signal. Recorded observations and browser experiments; no live orders or investment recommendations.</p>
+    </section>
+    <section data-view="experiments" hidden><div class="page-heading"><div><p class="eyebrow">Saved studies</p><h1>Your research notebook.</h1><p>Saved settings and results, ready to revisit.</p></div><a class="button primary" href="#workbench">New experiment ↗</a></div><div id="history-list"></div></section>
+    <section data-view="dataset" hidden><div class="page-heading"><div><p class="eyebrow">Know what you are testing</p><h1>Know your sample.</h1><p>Inspect this sample before reading its scores.</p></div></div><div id="dataset-inspector" class="panel inspector"></div><section class="panel reference-panel"><h2>The Python reference</h2><p>The original Python pipeline used scikit-learn on this same recorded capture. These fixed results are kept separate from your browser experiments.</p><div id="reference-results">Loading the reference…</div><p class="muted">90 seconds, one session and four held-out time blocks. A smoke test, not proof of durable predictive performance.</p></section></section>
+    <section data-view="method" hidden><div class="page-heading"><div><p class="eyebrow">A small research discipline</p><h1>Keep the future out.</h1><p>The experiment is only useful if its evaluation is believable.</p></div></div><details class="study-note"><summary>The question behind BookLab <span aria-hidden="true">＋</span></summary><div><p class="intro-lead">Can buy and sell pressure help predict the next price move?</p><p>Replay a recorded order book, change the prediction horizon and compare a fitted model with simple baselines. The leakage demonstrations show how future information can make a misleading score look convincing.</p></div></details><div class="method-grid"><article class="panel"><span class="method-number">01</span><h2>Replay what arrived</h2><p>The recorded sample contains real historical Coinbase book observations. The other sample is explicitly synthetic. Arrival time determines when information became available.</p></article><article class="panel"><span class="method-number">02</span><h2>Define one target</h2><p>Choose a horizon and deadband. The first observation at or after that horizon defines up, unchanged or down. Labels more than 200 ms late or across a session break are discarded.</p></article><article class="panel"><span class="method-number">03</span><h2>Split, then fit</h2><p>Use earlier observations for training and validation, and reserve the last period for testing. Training labels that reach into the next period are purged. Scaling learns from training only.</p></article><article class="panel"><span class="method-number">04</span><h2>Doubt the good result</h2><p>Compare all three classes and simple baselines. A short-run block interval cannot establish lasting signal. Try the leakage traps, then return to the valid chronological protocol.</p></article></div><section class="panel method-limits"><h2>What this playground does</h2><p>It fits browser softmax logistic models, compares validation candidates, refits on development data, and evaluates a held-out period. It runs locally in a worker; no Python server, exchange credentials or live connection is required.</p><h2>What is still research work</h2><p>Multiple real days, an exact FI-2010 paper reproduction, independent reruns, costs, fills and execution latency. Prediction scores are not trading profitability.</p></section></section>
+  </main>
+</div>
+<footer class="maison-footer" hidden><div><p>A practice of looking closer.</p><a href="#top">BookLab</a></div><div><span>Replay. Experiment. Question.</span><a href="#method">About the research ↗</a><span>Independent project · 2026</span></div><nav class="policy-links" aria-label="Site information"><button data-dialog="research-checklist">Research checklist</button><button data-dialog="terms">Terms of use</button><button data-dialog="privacy">Privacy policy</button><button data-dialog="storage">Cookies & storage</button><button data-motion-toggle aria-pressed="false">Reduce motion</button></nav></footer>
+<div id="toast" role="status" hidden></div>
+<dialog id="guide" aria-labelledby="guide-title"><form method="dialog"><button class="dialog-close" aria-label="Close guide">×</button><p class="eyebrow">Welcome to BookLab</p><h2 id="guide-title">Your first experiment.</h2><ol><li><strong>Play the tape.</strong> Scrub through the recorded order book and watch the midpoint.</li><li><strong>Change a setting.</strong> Try a shorter prediction horizon or remove trailing returns.</li><li><strong>Run and compare.</strong> Read macro F1, inspect the classes and save the run.</li></ol><p class="muted">For a useful lesson, open “Try a leakage trap” and give the model the future. The score may improve while the experiment becomes invalid.</p><button class="button primary">Let's explore ↗</button></form></dialog>
+<dialog id="research-checklist" class="info-dialog" aria-labelledby="checklist-title">
+  <form method="dialog"><button class="dialog-close" aria-label="Close research checklist">×</button></form>
+  <p class="eyebrow">A moment of discipline</p><h2 id="checklist-title">Before trusting a score.</h2>
+  <p>Four questions to carry into every experiment. These are your notes, not a certification.</p>
+  <fieldset class="research-checks"><legend class="sr-only">Research review</legend>
+    <label><input type="checkbox"><span>I checked whether the sample is recorded or synthetic.</span></label>
+    <label><input type="checkbox"><span>I used the chronological split and left future-target leakage off.</span></label>
+    <label><input type="checkbox"><span>I compared the classes, baselines and uncertainty.</span></label>
+    <label><input type="checkbox"><span>I understand that a short sample does not establish trading profitability.</span></label>
+  </fieldset>
+  <p id="checklist-status" class="info-note" role="status">0 of 4 noted · resets when this page reloads.</p>
+  <p class="info-note">The evidence page also includes the sample’s six construction checks.</p>
+  <form method="dialog"><button class="button primary">Back to exploring</button></form>
+</dialog>
+<dialog id="terms" class="info-dialog" aria-labelledby="terms-title">
+  <form method="dialog"><button class="dialog-close" aria-label="Close terms of use">×</button></form>
+  <p class="eyebrow">Last updated · 24 October 2026</p><h2 id="terms-title">Terms of use.</h2>
+  <p>BookLab is an experimental research playground for replaying supplied market samples and comparing prediction models.</p>
+  <h3>Use the results with care</h3><p>Historical and synthetic examples do not establish future performance. Outputs are educational research results, not investment advice or instructions to place orders. Trading costs, fills and execution latency are not simulated.</p>
+  <h3>Keep the context attached</h3><p>Check results independently. When sharing them, preserve the sample provenance, method and limitations. Future-target and shuffled-split demonstrations must remain labeled invalid.</p>
+  <h3>About this prototype</h3><p>The prototype and its samples may change or become unavailable. Third-party data and software remain subject to their respective rights and licences. Please do not attempt to disrupt the service or bypass its access controls.</p>
+  <form method="dialog"><button class="button primary">Close</button></form>
+</dialog>
+<dialog id="privacy" class="info-dialog" aria-labelledby="privacy-title">
+  <form method="dialog"><button class="dialog-close" aria-label="Close privacy policy">×</button></form>
+  <p class="eyebrow">Last updated · 24 October 2026</p><h2 id="privacy-title">Privacy policy.</h2>
+  <p>BookLab’s application runs experiments in your browser. It does not request exchange credentials, payment details or a separate BookLab account, and has no endpoint that uploads your experiment results.</p>
+  <h3>What stays in this browser</h3><p>When you choose Save experiment, the settings, summary results and save time stay in this browser’s local storage. The Notebook keeps up to 20 runs, without the full prediction list. Remove a run in the Notebook or clear saved experiments in Cookies & storage. Clearing this site’s browser data also removes them.</p>
+  <p>Your motion choice is stored locally until changed or cleared. Checklist answers last only while this page is open. JSON exports are created locally and stay wherever you choose to save them.</p>
+  <h3>Hosting and access</h3><p>BookLab includes no advertising or analytics trackers. Images, fonts, scripts and research samples are served with the site. Normal requests still reach the hosting service.</p>
+  <p>Vercel hosts this version of BookLab. Its handling of technical service data is described in <a href="https://vercel.com/legal/privacy-policy" target="_blank" rel="noopener noreferrer">Vercel’s Privacy Policy ↗</a>. Any hosting access controls are managed by Vercel.</p>
+  <p class="info-note">For questions about this prototype, contact the person who shared it with you.</p>
+  <form method="dialog"><button class="button primary">Close</button></form>
+</dialog>
+<dialog id="storage" class="info-dialog" aria-labelledby="storage-title">
+  <form method="dialog"><button class="dialog-close" aria-label="Close cookies and storage">×</button></form>
+  <p class="eyebrow">Your browser, your notes</p><h2 id="storage-title">Cookies & storage.</h2>
+  <p>BookLab’s application code does not set cookies. The hosting provider may use cookies for service security and access control.</p>
+  <dl class="storage-list"><div><dt>Saved experiments</dt><dd>Only saved when you choose. Up to 20 runs, kept on this browser.</dd></div><div><dt>Motion preference</dt><dd>Remembers your choice to reduce animation.</dd></div><div><dt>Advertising & analytics</dt><dd>None included in BookLab.</dd></div></dl>
+  <p id="storage-status" class="info-note" role="status"></p>
+  <div class="storage-actions"><button class="button secondary" id="manage-saved">Open Notebook ↗</button><button class="button secondary" id="clear-saved">Clear saved experiments</button></div>
+  <div id="clear-saved-confirm" class="storage-confirm" hidden><p>This removes every saved experiment from this browser. Export any result you want to keep first.</p><button class="button primary" id="confirm-clear-saved">Clear the saved runs</button><button class="button secondary" id="cancel-clear-saved">Keep them</button></div>
+  <form method="dialog"><button class="button primary">Done</button></form>
+</dialog>
+<noscript><p class="noscript">BookLab needs JavaScript for replay and local experiments. The original Python report remains available in your BookLab source package.</p></noscript>
+</body></html>
